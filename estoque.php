@@ -3,6 +3,15 @@ if (!isset($_SESSION)) {
     session_start();
 }
 include('verifica_login.php');
+include('conexao.php');
+
+// Consulta ao banco de dados - produtos
+$produtos = "SELECT produto_id, nomeproduto";
+$produtos .= " FROM produtos WHERE usuario_id = '{$_SESSION['usuario_id']}'";
+$resultado = mysqli_query($conexao, $produtos);
+if (!$resultado) {
+    die("Falha na consulta!");
+}
 ?>
 
 <!doctype html>
@@ -47,7 +56,7 @@ include('verifica_login.php');
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="#" class="nav-link active text-white" aria-current="page">
+                    <a href="#" class="nav-link text-white" aria-current="page">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door me-2" viewBox="0 0 16 16">
                             <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z" />
                         </svg>
@@ -55,7 +64,7 @@ include('verifica_login.php');
                     </a>
                 </li>
                 <li>
-                    <a href="estoque.php" class="nav-link text-white">
+                    <a href="#" class="nav-link active text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shop-window me-2" viewBox="0 0 16 16">
                             <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0zM1.5 8.5A.5.5 0 0 1 2 9v6h12V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zm2 .5a.5.5 0 0 1 .5.5V13h8V9.5a.5.5 0 0 1 1 0V13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a.5.5 0 0 1 .5-.5z" />
                         </svg>
@@ -121,6 +130,24 @@ include('verifica_login.php');
             </div>
         </div>
         <div class="b-example-divider"></div>
+
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width:78.9%;">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <span class="fs-4">Estoque de Produtos</span>
+            </a>
+            <hr>
+            <div>
+            <?php
+                while ($linha = mysqli_fetch_assoc($resultado)) {
+            ?> 
+            <ul>
+                <li><h5><?php echo $linha["nomeproduto"]?></h5></li>
+            </ul>       
+            <?php
+                }
+            ?>
+            </div>
+        </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="scripts/sidebars.js"></script>
